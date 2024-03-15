@@ -1,0 +1,10 @@
+@ManagementSystem_DotNet8_HostAddress = https://localhost:7020
+
+
+
+
+
+
+GET {{ManagementSystem_DotNet8_HostAddress}}/api/user
+
+###

@@ -1,6 +1,7 @@
 ﻿using ManagementSystem_DotNet8.Data;
 using ManagementSystem_DotNet8.DTOs;
 using ManagementSystem_DotNet8.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -19,6 +20,7 @@ namespace ManagementSystem_DotNet8.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<Information>>> AddInformation(CreateInformationDto information)
         {
             var newInformation = new Information() { 
@@ -43,13 +45,16 @@ namespace ManagementSystem_DotNet8.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<Information>>> GetAllInformations()
         {
             var informations = await _context.Informations.ToListAsync();
             return Ok(informations);
         }
 
+
         [HttpGet("{userId}")]
+        [Authorize]
         public async Task<ActionResult<List<Information>>> GetInformation(string userId)
         {
             var information = await _context.Informations.Where(x => x.UserId == userId).ToListAsync();
@@ -61,6 +66,7 @@ namespace ManagementSystem_DotNet8.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<Information>>> UpdateInformation(int infoId, UpdateInformationDto information)
         {
             var newInformation = await _context.Informations.FindAsync(infoId);
@@ -83,6 +89,7 @@ namespace ManagementSystem_DotNet8.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<Information>>> DeleteInformation(int infoId)
         {
             

@@ -37,7 +37,7 @@ namespace ManagementSystem_DotNet8.Controllers
 
         
         [HttpGet("{id}")]
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         public async Task<ActionResult<List<User>>> GetUser(string id)
         {
             var user = await _context.Users.Include(x => x.Informations).FirstOrDefaultAsync(x => x.Id == id);
@@ -47,6 +47,7 @@ namespace ManagementSystem_DotNet8.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<User>>> AddUser(RegisterDto user)
         {
             var newUser = new User() { UserName = user.UserName };
@@ -55,6 +56,7 @@ namespace ManagementSystem_DotNet8.Controllers
         }
 
         [HttpPut]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<User>>> UpdateUser(string userId, RegisterDto user)
         {
             var newUser = await userManager.FindByIdAsync(userId);
@@ -69,6 +71,7 @@ namespace ManagementSystem_DotNet8.Controllers
         }
 
         [HttpDelete]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<User>>> DeleteUser(string userId)
         {
             var user = await userManager.FindByIdAsync(userId);

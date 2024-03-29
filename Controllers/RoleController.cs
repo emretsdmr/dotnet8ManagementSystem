@@ -72,7 +72,7 @@ namespace ManagementSystem_DotNet8.Controllers
             return Ok("Role deleted");
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpGet("UserRole")]
         public async Task<ActionResult<List<RolesWithIdsDto>>> GetUserRole(string userId)
         {

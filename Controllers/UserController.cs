@@ -80,5 +80,8 @@ namespace ManagementSystem_DotNet8.Controllers
             await userManager.DeleteAsync(user);
             return Ok("User deleted");
         }
+
+        
+
     }
 }

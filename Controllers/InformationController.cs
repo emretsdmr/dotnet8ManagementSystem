@@ -20,7 +20,7 @@ namespace ManagementSystem_DotNet8.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "ManageInformations")]
         public async Task<ActionResult<List<Information>>> AddInformation(CreateInformationDto information)
         {
             var newInformation = new Information() { 
@@ -45,7 +45,7 @@ namespace ManagementSystem_DotNet8.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "ManageInformations")]
         public async Task<ActionResult<List<Information>>> GetAllInformations()
         {
             var informations = await _context.Informations.ToListAsync();
@@ -66,7 +66,7 @@ namespace ManagementSystem_DotNet8.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "ManageInformations")]
         public async Task<ActionResult<List<Information>>> UpdateInformation(int infoId, UpdateInformationDto information)
         {
             var newInformation = await _context.Informations.FindAsync(infoId);
@@ -89,7 +89,7 @@ namespace ManagementSystem_DotNet8.Controllers
         }
 
         [HttpDelete]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "ManageInformations")]
         public async Task<ActionResult<List<Information>>> DeleteInformation(int infoId)
         {
             

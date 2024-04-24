@@ -39,7 +39,7 @@ namespace ManagementSystem_DotNet8.Services
             {
                 return new UserLoginResponse() { };
             }
-            var userRoles = await userManager.GetRolesAsync(user);
+            
             var signInResult = await signInManager.PasswordSignInAsync(
                 userName: request.Username!,
                 password: request.Password,
@@ -47,7 +47,7 @@ namespace ManagementSystem_DotNet8.Services
                 lockoutOnFailure: false);
             if (signInResult.Succeeded)
             {
-                var generatedTokenInformation = await tokenService.GenerateToken(new GenerateTokenRequest { Username = request.Username }, userRoles);
+                var generatedTokenInformation = await tokenService.GenerateToken(new GenerateTokenRequest { Username = request.Username }, user);
 
                 response.AuthenticateResult = true;
                 response.AuthToken = generatedTokenInformation.Token;

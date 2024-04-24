@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,7 +32,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
 
-builder.Services.AddSwaggerGen(c => {
+builder.Services.AddSwaggerGen(c =>
+{
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "JWTToken_Auth_API",
@@ -102,7 +104,28 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    /*options.AddPolicy("ManageUser",
+    policy => policy.RequireClaim("UserClaim", "ManageUser"));
+
+    options.AddPolicy("ManageInformations",
+    policy => policy.RequireClaim("UserClaim", "ManageInformations"));
+
+    options.AddPolicy("ManageRoles",
+    policy => policy.RequireClaim("UserClaim", "ManageRoles"));*/
+
+    options.AddPolicy("ManageUser",
+    policy => policy.RequireClaim("RoleClaim", "ManageUser"));
+
+    options.AddPolicy("ManageInformations",
+    policy => policy.RequireClaim("RoleClaim", "ManageInformations"));
+
+    options.AddPolicy("ManageRoles",
+    policy => policy.RequireClaim("RoleClaim", "ManageRoles"));
+
+
+});
 
 var app = builder.Build();
 

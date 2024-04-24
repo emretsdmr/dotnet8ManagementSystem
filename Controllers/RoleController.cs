@@ -24,7 +24,7 @@ namespace ManagementSystem_DotNet8.Controllers
             this.roleManager = roleManager;
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "ManageUser")]
         [HttpGet]
         public async Task<ActionResult<List<IdentityRole>>> GetAllRoles()
         {
@@ -36,7 +36,7 @@ namespace ManagementSystem_DotNet8.Controllers
             return Ok(roles);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "ManageRoles")]
         [HttpPost]
         public async Task<ActionResult<List<IdentityRole>>> AddRole(IdentityRole role)
         {
@@ -45,7 +45,7 @@ namespace ManagementSystem_DotNet8.Controllers
             return Ok("Role created.");
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "ManageRoles")]
         [HttpPut]
         public async Task<ActionResult<List<IdentityRole>>> UpdateRole(IdentityRole updatedRole)
         {
@@ -58,7 +58,7 @@ namespace ManagementSystem_DotNet8.Controllers
             return Ok(await _context.Roles.ToListAsync());
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "ManageRoles")]
         [HttpDelete]
         public async Task<ActionResult<List<IdentityRole>>> DeleteRole(string id)
         {
@@ -91,7 +91,7 @@ namespace ManagementSystem_DotNet8.Controllers
             return Ok(rolesWithIds);
         }
 
-        [Authorize(Roles="Admin")]
+        [Authorize(Policy = "ManageRoles")]
         [HttpPost("UserRole")]
         public async Task<ActionResult<List<IdentityUserRole<string>>>> AddUserRole(AddUserRoleDto userRole)
         {
@@ -120,7 +120,7 @@ namespace ManagementSystem_DotNet8.Controllers
 
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "ManageRoles")]
         [HttpDelete("UserRole")]
         public async Task<ActionResult<List<IdentityUserRole<string>>>> DeleteUserRole(IdentityUserRole<string> userRole)
         {
@@ -129,7 +129,7 @@ namespace ManagementSystem_DotNet8.Controllers
             return Ok("Role is deleted from user.");
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Policy = "ManageRoles")]
         [HttpPut("UserRole")]
         public async Task<ActionResult<List<IdentityUserRole<string>>>> UpdateUserRole([FromBody] IdentityUserRole<string> user, string newRole)
         {

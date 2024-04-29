@@ -49,56 +49,68 @@ namespace ManagementSystem_DotNet8.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<ActionResult<List<IdentityUserClaim<string>>>> EditUserPolicy(List<UserPermission> newPermissions)
         {
-            //veritabanından policyleri çek
-            //newPermissions ile veritabanından gelen claimValue'ları kontrol et
-            var user = await userManager.FindByIdAsync(newPermissions[0].userId);
-            var oldPermissions = await _context.UserClaims.Where(u => u.UserId == user.Id).ToListAsync();            
-
             
-            if(newPermissions.Count > oldPermissions.Count)
+            var user = await userManager.FindByIdAsync(newPermissions[0].userId);
+            var oldPermissions = await _context.UserClaims.Where(u => u.UserId == user.Id).ToListAsync();
+        
+        
+            if(oldPermissions.Count >= newPermissions.Count)
             {
-                var policiesToAdd = newPermissions.ExceptBy(oldPermissions.Select(o => o.ClaimType), n => n.claimType);                
-                foreach (var policy in policiesToAdd)
+                var intersectNew = newPermissions.IntersectBy(oldPermissions.Select(o => o.ClaimType), n => n.claimType);
+                var intersectOld = oldPermissions.IntersectBy(newPermissions.Select(o => o.claimType), n => n.ClaimType);
+        
+                foreach (var newP in intersectNew)
                 {
-                    if (policy.claimValue == "True")
+                    foreach (var oldP in intersectOld)
                     {
-                        await userManager.AddClaimAsync(user, new Claim(policy.claimType, policy.claimValue));
-                        
+                        if (newP.claimType == oldP.ClaimType)
+                        {
+                            if (newP.claimValue == "False" && oldP.ClaimValue == "True")
+                            {
+                                _context.UserClaims.Remove(oldP);  //delete
+                                await _context.SaveChangesAsync();
+                            }
+                        }
                     }
                 }
-                return Ok("permission added");
+        
+                return Ok("ok");
             }
-            if(newPermissions.Count < oldPermissions.Count)
+        
+            if(newPermissions.Count > oldPermissions.Count) 
             {
-                var policiesToDelete = oldPermissions.ExceptBy(newPermissions.Select(n => n.claimType), o => o.ClaimType);
-                
-                foreach(var policy in policiesToDelete)
-                {                                                             
-                        _context.UserClaims.Remove(policy);
-                        await _context.SaveChangesAsync();
-
-                }
-                return Ok("permission deleted");
-            }
-            /*if (newPermissions.Count == oldPermissions.Count)
-            {                    
-                foreach (var policy in oldPermissions)
+                var policiesToAdd = newPermissions.ExceptBy(oldPermissions.Select(o => o.ClaimType), n => n.claimType);
+        
+                var intersectNew = newPermissions.IntersectBy(oldPermissions.Select(o => o.ClaimType), n => n.claimType);
+                var intersectOld = oldPermissions.IntersectBy(newPermissions.Select(o => o.claimType), n => n.ClaimType);
+        
+                foreach (var newP in intersectNew)
                 {
-                    if(policy.ClaimValue == "False")
+                    foreach (var oldP in intersectOld)
                     {
-                        var policyX = _context.UserClaims.FindAsync(policy.Id);
-                        _context.UserClaims.Remove(policy);
-                        await userManager.RemoveClaimsAsync(user, policy);
+                        if (newP.claimType == oldP.ClaimType)
+                        {
+                            if (newP.claimValue == "False" && oldP.ClaimValue == "True")
+                            {
+                                _context.UserClaims.Remove(oldP); //delete
+                                await _context.SaveChangesAsync();
+                            }
+                        }
                     }
-                        
-                    
-                    
-                    await _context.SaveChangesAsync();
-
                 }
-                return Ok("permission deleted");
-            }*/
-
+        
+                foreach(var addP in policiesToAdd)
+                {
+                    if (addP.claimValue == "True")
+                    {
+                        await userManager.AddClaimAsync(user, new Claim(addP.claimType, addP.claimValue)); //add
+                    }
+                }
+        
+                return Ok("ok");
+            }      
+                                   
+        
             return Ok("ok");
             
         }

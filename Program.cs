@@ -116,13 +116,13 @@ builder.Services.AddAuthorization(options =>
     policy => policy.RequireClaim("UserClaim", "ManageRoles"));*/
 
     options.AddPolicy("ManageUser",
-    policy => policy.RequireClaim("RoleClaim", "ManageUser"));
+    policy => policy.RequireClaim("ManageUser", "True"));
 
     options.AddPolicy("ManageInformations",
-    policy => policy.RequireClaim("RoleClaim", "ManageInformations"));
+    policy => policy.RequireClaim("ManageInformations", "True"));
 
     options.AddPolicy("ManageRoles",
-    policy => policy.RequireClaim("RoleClaim", "ManageRoles"));
+    policy => policy.RequireClaim("ManageRoles", "True"));
 
 
 });

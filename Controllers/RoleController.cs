@@ -24,7 +24,7 @@ namespace ManagementSystem_DotNet8.Controllers
             this.roleManager = roleManager;
         }
 
-        [Authorize(Policy = "ManageUser")]
+        [Authorize(Policy = "ManageRoles")]
         [HttpGet]
         public async Task<ActionResult<List<IdentityRole>>> GetAllRoles()
         {
